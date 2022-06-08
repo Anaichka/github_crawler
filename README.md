@@ -1,10 +1,12 @@
 # github_crawler
-Simple little crawler to retrieve github content using given input information
+Simple little crawler to retrieve github content using given input information :)
 
-To start crawler just add to the input.py JSON containing:
+To start the crawler just add to the ***input.py*** a JSON containing:
 
-Example:
-{
+**Example:**
+
+```
+  {
   "keywords": [
     "openstack",
     "nova",
@@ -18,3 +20,4 @@ Example:
       ],
   "type": "Repositories"
 }
+```
