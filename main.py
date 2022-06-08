@@ -3,7 +3,6 @@ import re
 import requests
 
 from typing import Dict, List, AnyStr
-from urllib3.exceptions import InsecureRequestWarning
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
