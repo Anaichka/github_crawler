@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 import requests
 
@@ -14,18 +15,25 @@ base_headers = {
 
 def process_input() -> Dict: 
     with open('input.json', 'r') as input_file:
+        input = None
         
-        input = json.loads(input_file.read())
+        try:
+            input = json.loads(input_file.read())
+        except:
+            logging.error('Please input a valid data type. Only JSON-formatted data is allowed')
         
         if isinstance(input, dict):
             keywords = input.get('keywords', [])
             proxy_list = input.get('proxies', [])
-        else:
+            return fetch_data(keywords, proxy_list)
+        elif isinstance(input, list):
             for member in input:
                 keywords = member.get('keywords', [])
                 proxy_list = member.get('proxies', [])
-    
-        return fetch_data(keywords, proxy_list)
+            return fetch_data(keywords, proxy_list)
+        else:
+            logging.error("JSON file can't be empty")
+            
     
 def fetch_data(keywords: List, proxy_list: List = None, type: AnyStr = None) -> Dict:
     out_list = {}
