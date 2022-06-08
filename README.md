@@ -1,7 +1,7 @@
 # github_crawler
 Simple little crawler to retrieve github content using given input information :)
 
-To start the crawler just add to the ***input.py*** a JSON containing:
+To start the crawler just add to the ***input.json*** a JSON containing:
 
 **Example:**
 
