@@ -17,9 +17,14 @@ def process_input() -> Dict:
     with open('input.json', 'r') as input_file:
         
         input = json.loads(input_file.read())
-    
-        keywords = input.get('keywords', [])
-        proxy_list = input.get('proxies', [])
+        
+        if isinstance(input, dict):
+            keywords = input.get('keywords', [])
+            proxy_list = input.get('proxies', [])
+        else:
+            for member in input:
+                keywords = member.get('keywords', [])
+                proxy_list = member.get('proxies', [])
     
         return fetch_data(keywords, proxy_list)
     

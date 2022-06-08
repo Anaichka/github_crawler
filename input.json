@@ -1,4 +1,4 @@
-{
+[{
   "keywords": [
     "openstack",
     "nova",
@@ -9,4 +9,16 @@
              "8.210.83.33:80",
              "103.47.67.158:8080"],
   "type": "Repositories"
-}
+},
+{
+  "keywords": [
+    "python",
+    "django-rest-framework",
+    "jwt"
+  ],
+  "proxies": [
+    "194.126.37.94:8080",
+    "13.78.125.167:8080"
+  ],
+  "type": "Repositories"
+}]
