@@ -1,5 +1,4 @@
 import re
-import sys 
 import json
 import logging
 import requests
@@ -14,8 +13,8 @@ base_link = 'https://github.com'
 base_headers = {
     'User_Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36'
 }
-logger = logging.getLogger()
-logger.level = logging.ERROR
+logger = logging.getLogger('Petlyura')
+logging.basicConfig(level=logging.ERROR)
 
 def process_input(filename) -> Dict: 
     with open(filename, 'r') as input_file:
@@ -25,7 +24,6 @@ def process_input(filename) -> Dict:
             input = json.loads(input_file.read())
         except json.JSONDecodeError:
             logger.error('Please input a valid data type. Only JSON-formatted data is allowed')
-            sys.exc_info()
         
         if isinstance(input, dict):
             keywords = input.get('keywords', [])
@@ -71,6 +69,8 @@ def fetch_data(keywords: List, proxy_list: List = None, type: AnyStr = None) -> 
 
                 repo_info.append({'url': link, 'extra': { 'owner': author,'language_stats': language_stats}})
             out_list.update({word:[i for i in repo_info]})
+        else:
+            logger.error("There are no links found")
     
     return out_list
 
