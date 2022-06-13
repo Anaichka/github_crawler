@@ -1,0 +1,9 @@
+{
+    "keywords": [
+      "openstack"
+    ],
+    "proxies":["80.48.119.28:8080",
+               "110.34.13.4:8080"],
+    "type": "Repositories"
+  }
+  
