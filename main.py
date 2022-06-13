@@ -3,8 +3,9 @@ import json
 import logging
 import requests
 
-from typing import Dict, List, AnyStr
 from lxml import html
+from urllib import parse
+from typing import Dict, List, AnyStr
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
@@ -41,24 +42,21 @@ def process_input(filename) -> Dict:
             
     
 def fetch_data(keywords: List, proxy_list: List = None, type: AnyStr = None) -> Dict:
-    out_list = {}
+    out_dict = {}
     
+    session = requests.Session()
+    session.proxies = proxy_list
+    retry = Retry(connect=3, backoff_factor=0.5)
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('https://', adapter)
     for word in keywords:
-        session = requests.Session()
-        session.proxies = proxy_list
-        retry = Retry(connect=3, backoff_factor=0.5)
-        adapter = HTTPAdapter(max_retries=retry)
-        session.mount('https://', adapter)
-
-        resp = session.get(base_link+'/search?q='+word, headers=base_headers)
-        
+        resp = session.get(parse.urljoin(base_link,'/search'), params={"q": word}, headers=base_headers)
         repo_list = re.findall(r'click-hmac="\w+"\shref="([^"]+)', resp.text)
         if repo_list:
             repo_info = []
             for elem in repo_list:
-                link = base_link+elem
                 author = elem.split('/')[1]
-                repo_resp = session.get(link, headers=base_headers)
+                repo_resp = session.get(parse.urljoin(base_link, elem), headers=base_headers)
                 tree = html.fromstring(repo_resp.text)
                 languages = tree.xpath('//span[@class="Progress"]/span')
                 language_stats = {}
@@ -68,11 +66,11 @@ def fetch_data(keywords: List, proxy_list: List = None, type: AnyStr = None) -> 
                     language_stats.update({lang:stat})
 
                 repo_info.append({'url': link, 'extra': { 'owner': author,'language_stats': language_stats}})
-            out_list.update({word:[i for i in repo_info]})
+            out_dict[word] = repo_info
         else:
             logger.error("There are no links found")
     
-    return out_list
+    return out_dict
 
 
 if __name__ == "__main__":
